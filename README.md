@@ -1,267 +1,246 @@
-[README.md](https://github.com/user-attachments/files/28925045/README.md)
-# DESIGN AND EVALUATION OF A CNN ARCHITECTURE FOR CLASSIFYING IMBALANCED HISTOPATHOLOGICAL IMAGES OF ORAL CANCER
+# Design and Evaluation of a CNN Architecture for Classifying Imbalanced Histopathological Images of Oral Cancer
 
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://python.org)
-[![PyTorch](https://img.shields.io/badge/Framework-PyTorch-orange)](https://pytorch.org)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-[![Dataset](https://img.shields.io/badge/Dataset-Kaggle%20OSCC-lightblue)](https://www.kaggle.com/datasets/ashenafifasilkebede/dataset)
-
-> **BCA Thesis Project** — Center for Computer Science and Applications, [DIBRUGARH UNIVERSITY]  
-> Author: [PRAGYAN CHETIA] | Supervisor: [DR. PRANJAL KUMAR BORA] | Year: [2025]
-
----
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-DeepLearning-orange)
+![CNN](https://img.shields.io/badge/Model-CNN-green)
+![Medical Imaging](https://img.shields.io/badge/Application-Oral%20Cancer-red)
 
 ## Overview
 
-Oral Squamous Cell Carcinoma (OSCC) is among the most prevalent oral malignancies worldwide, yet its timely diagnosis remains challenging due to the subtle visual differences between normal and cancerous tissue in histopathological slides. This project presents a deep learning pipeline for binary classification of OSCC from high-resolution Haematoxylin and Eosin (H&E)-stained biopsy images.
+Oral Squamous Cell Carcinoma (OSCC) is one of the most common forms of oral cancer and early diagnosis plays a critical role in improving patient outcomes. Histopathological examination remains the gold standard for diagnosis, but manual analysis is time-consuming and subject to inter-observer variability.
 
-A custom CNN architecture was designed and benchmarked against established pre-trained models. Three dataset variants — original, augmented, and SMOTE+augmented — were used to systematically study the effects of data balancing at both image and feature levels. The proposed CNN achieved **99.16% accuracy**, an **F1-score of 88.39**, and an **AUC of 89.08** on the augmented balanced dataset, outperforming all pre-trained baselines.
+This project presents a deep learning-based framework for automated classification of oral cancer histopathological images. A custom Convolutional Neural Network (CNN) architecture was designed and evaluated on multiple versions of an imbalanced oral cancer dataset. The proposed model was compared with several state-of-the-art pre-trained CNN architectures including VGG16, VGG19, DenseNet, MobileNet, Xception, EfficientNet, and InceptionV3.
+
+The study investigates the impact of image preprocessing, data augmentation, and SMOTE-based balancing techniques on classification performance.
 
 ---
 
-## Key Results
+## Project Information
 
-| Model | Dataset Variant | Accuracy | F1-Score | AUC | Recall |
-|---|---|---|---|---|---|
-| **Proposed CNN** | Augmented | **99.16%** | **88.39** | **89.08** | — |
-| Proposed CNN | Original (Imbalanced) | — | — | — | — |
-| Proposed CNN | SMOTE + Augmented | — | — | — | — |
-| VGG16 | Augmented | — | — | — | — |
-| ResNet50 | Augmented | — | — | — | — |
-| InceptionV3 | Augmented | — | — | — | — |
-| MobileNetV2 | Augmented | — | — | — | — |
+**Project Title:**
+Design and Evaluation of a CNN Architecture for Classifying Imbalanced Histopathological Images of Oral Cancer
 
-> Fill in the full results table from your thesis. This table is the first thing a reader or recruiter will look for.
+**Author:** Pragyan Chetia
+
+**Degree:** Bachelor of Computer Application (BCA)
+
+**Institution:** Centre for Computer Science and Applications, Dibrugarh University
+
+**Supervisor:** Dr. Pranjal Kumar Bora
+
+**Academic Session:** 2024–2025
+
+---
+
+## Objectives
+
+* Develop a custom CNN model for oral cancer classification.
+* Compare the proposed model with established deep learning architectures.
+* Investigate the effect of dataset balancing strategies.
+* Improve classification performance through image preprocessing and augmentation.
+* Identify the most effective dataset preparation strategy for OSCC classification.
 
 ---
 
 ## Dataset
 
-**Histopathological Imaging Database for Oral Cancer Analysis**  
-Source: [Kaggle — OSCC Dataset](https://www.kaggle.com/datasets/ashenafifasilkebede/dataset)
+The study uses the Histopathological Imaging Database for Oral Cancer Analysis.
 
-| Class | Original Count | After Augmentation |
-|---|---|---|
-| Normal | — | — |
-| OSCC (Malignant) | — | — |
+### Dataset Characteristics
 
-The dataset consists of H&E-stained biopsy images captured at 400× magnification. Due to licence restrictions, raw images are **not included** in this repository. Download instructions are provided below.
+| Category      | Samples |
+| ------------- | ------- |
+| Normal Tissue | 201     |
+| OSCC Tissue   | 495     |
+| Total Images  | 696     |
 
-### Download and Setup
+### Image Specifications
 
-```bash
-# Install Kaggle API
-pip install kaggle
+* H&E stained biopsy images
+* Magnification: 400×
+* Resolution: 2048 × 1536 pixels
+* Binary Classification:
 
-# Download dataset (requires kaggle.json credentials)
-kaggle datasets download -d ashenafifasilkebede/dataset -p data/raw/ --unzip
-```
-
-Expected directory structure after download:
-
-```
-data/
-├── raw/
-│   ├── Normal/
-│   └── OSCC/
-├── augmented/
-│   ├── Normal/
-│   └── OSCC/
-└── smote_augmented/      # Feature-level balanced (generated by notebook)
-```
+  * Normal
+  * Oral Squamous Cell Carcinoma (OSCC)
 
 ---
 
-## Architecture
+## Dataset Variants
 
-### Proposed Custom CNN
+Three datasets were prepared and evaluated:
 
-```
-Input (224×224×3)
-    │
-    ├── Conv2D(32, 3×3) → BatchNorm → ReLU → MaxPool
-    ├── Conv2D(64, 3×3) → BatchNorm → ReLU → MaxPool
-    ├── Conv2D(128, 3×3) → BatchNorm → ReLU → MaxPool
-    ├── Conv2D(256, 3×3) → BatchNorm → ReLU → MaxPool
-    │
-    ├── Flatten
-    ├── Dense(512) → ReLU → Dropout(0.5)
-    ├── Dense(256) → ReLU → Dropout(0.3)
-    └── Dense(1) → Sigmoid
-```
+### 1. Original Dataset
 
-> Replace the above with your actual architecture diagram or paste your model summary output.
+* Preprocessed images
+* Retains original class imbalance
 
-### Pre-trained Baselines
+### 2. Augmented Dataset
 
-All pre-trained models used ImageNet weights with a custom classification head replacing the final layer. Fine-tuning was applied to the last N layers (details in `notebooks/03_pretrained_models.ipynb`).
+* Rotation
+* Flipping
+* Zooming
+* Shifting
+
+Both classes expanded to approximately 5000 images.
+
+### 3. SMOTE + Augmented Dataset
+
+* SMOTE applied to minority class
+* Followed by image augmentation
+* Produces a balanced and diversified dataset
 
 ---
 
-## Preprocessing Pipeline
+## Image Preprocessing Pipeline
 
-The following pipeline was applied uniformly across all dataset variants:
+The following preprocessing steps were applied:
 
-1. **Resizing** — all images resized to 224×224 pixels
-2. **Noise filtering** — Gaussian filter to reduce staining artefacts
-3. **Contrast enhancement** — CLAHE (Contrast Limited Adaptive Histogram Equalization) applied per channel
-4. **Normalisation** — pixel values scaled to [0, 1]
+1. Image Resizing (256 × 256)
+2. Median Filtering for noise removal
+3. CLAHE (Contrast Limited Adaptive Histogram Equalization)
+4. Normalization
 
-### Data Balancing Strategies
+These steps improve tissue visibility, enhance contrast, and reduce staining artifacts.
 
-| Strategy | Method | Level |
-|---|---|---|
-| Original | None (imbalanced) | — |
-| Augmented | Random flip, rotation, zoom, brightness jitter | Image-level |
-| SMOTE + Augmented | Above + SMOTE on extracted features | Feature-level |
+---
+
+## Proposed CNN Architecture
+
+The proposed CNN consists of:
+
+* 8 Convolution Layers
+* 5 MaxPooling Layers
+* 2 Dropout Layers
+* Flatten Layer
+* 3 Dense Layers
+* Softmax Output Layer
+
+Architecture Flow:
+
+Input Image
+→ Conv Layers
+→ MaxPooling
+→ Dropout
+→ Flatten
+→ Fully Connected Layers
+→ Softmax Classification
+
+Total Parameters: 768,642
+
+---
+
+## Models Evaluated
+
+The proposed CNN was compared against:
+
+* VGG16
+* VGG19
+* DenseNet
+* MobileNet
+* Xception
+* EfficientNet
+* InceptionV3
+
+---
+
+## Performance Metrics
+
+The following evaluation metrics were used:
+
+* Accuracy
+* Precision
+* Recall
+* F1 Score
+* AUC Score
+* Confusion Matrix
+* ROC Curve
+
+---
+
+## Results
+
+The proposed CNN achieved the best overall performance.
+
+### Best Performance
+
+| Dataset           | Accuracy |
+| ----------------- | -------- |
+| Augmented Dataset | 99.16%   |
+
+Additional metrics on the augmented dataset:
+
+* F1 Score: 88.39
+* AUC Score: 89.08
+
+The proposed CNN outperformed all evaluated pre-trained architectures.
+
+---
+
+## Technologies Used
+
+* Python
+* TensorFlow / Keras
+* NumPy
+* Pandas
+* Scikit-Learn
+* OpenCV
+* Matplotlib
+* Google Colab
+* Jupyter Notebook
 
 ---
 
 ## Repository Structure
 
-```
-oscc-classification/
+```text
+project/
 │
-├── data/                          # Dataset directory (not tracked by Git)
-│   ├── raw/
-│   ├── augmented/
-│   └── smote_augmented/
-│
+├── dataset/
+├── preprocessing/
+├── augmentation/
+├── models/
 ├── notebooks/
-│   ├── 01_eda.ipynb               # Exploratory data analysis and class distribution
-│   ├── 02_preprocessing.ipynb     # Full preprocessing pipeline with CLAHE
-│   ├── 03_augmentation.ipynb      # Image augmentation and SMOTE pipeline
-│   ├── 04_custom_cnn.ipynb        # Proposed CNN — training and evaluation
-│   ├── 05_pretrained_models.ipynb # VGG16, ResNet50, InceptionV3, MobileNetV2
-│   └── 06_results_analysis.ipynb  # Comparative results, confusion matrices, ROC curves
-│
-├── src/
-│   ├── model.py                   # Custom CNN architecture definition
-│   ├── dataset.py                 # PyTorch Dataset class and data loaders
-│   ├── train.py                   # Training loop with early stopping
-│   ├── evaluate.py                # Evaluation metrics (AUC, F1, recall, precision)
-│   ├── preprocessing.py           # CLAHE, noise filtering, normalisation
-│   └── augmentation.py            # Augmentation transforms and SMOTE pipeline
-│
-├── experiments/
-│   ├── configs/                   # YAML config files for each experiment run
-│   │   ├── custom_cnn_augmented.yaml
-│   │   └── resnet50_augmented.yaml
-│   └── logs/                      # Training logs (loss curves, metric history)
-│
 ├── results/
-│   ├── figures/                   # Confusion matrices, ROC curves, loss plots
-│   └── metrics_summary.csv        # All model × dataset results in one table
-│
-├── requirements.txt
+├── figures/
 ├── README.md
-└── LICENSE
+└── requirements.txt
 ```
 
 ---
 
-## Setup and Installation
+## Key Contributions
 
-```bash
-# Clone the repository
-git clone https://github.com/[your-username]/oscc-classification.git
-cd oscc-classification
-
-# Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate          # Linux/macOS
-# venv\Scripts\activate           # Windows
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-**requirements.txt** covers:
-
-```
-torch>=2.0.0
-torchvision>=0.15.0
-numpy>=1.24.0
-pandas>=1.5.0
-scikit-learn>=1.2.0
-imbalanced-learn>=0.10.0         # For SMOTE
-opencv-python>=4.7.0
-matplotlib>=3.7.0
-seaborn>=0.12.0
-jupyter>=1.0.0
-Pillow>=9.4.0
-tqdm>=4.65.0
-```
+* Designed a custom CNN architecture specifically for oral cancer histopathology.
+* Evaluated multiple balancing strategies for imbalanced medical datasets.
+* Demonstrated the effectiveness of CLAHE-based preprocessing.
+* Achieved 99.16% classification accuracy on the augmented dataset.
+* Provided comparative analysis against multiple transfer learning architectures.
 
 ---
 
-## Running Experiments
+## Future Work
 
-### Train the custom CNN
-
-```bash
-python src/train.py --config experiments/configs/custom_cnn_augmented.yaml
-```
-
-### Evaluate a trained model
-
-```bash
-python src/evaluate.py --model_path experiments/logs/custom_cnn_best.pth --dataset augmented
-```
-
-### Run all notebooks in order
-
-```bash
-jupyter nbconvert --to notebook --execute notebooks/01_eda.ipynb
-# ... repeat for each notebook
-```
-
----
-
-## Visualisations
-
-Key figures generated by this project (see `results/figures/`):
-
-- Class distribution before and after balancing
-- Sample H&E images — normal vs OSCC tissue
-- Effect of CLAHE preprocessing (before/after comparison)
-- Training and validation loss/accuracy curves for all models
-- Confusion matrices for each model × dataset combination
-- ROC curves with AUC comparison across all models
-- Grad-CAM visualisations highlighting discriminative regions
-
----
-
-## Ethical Considerations
-
-This project uses a publicly available, de-identified dataset. All experiments were conducted solely for academic research purposes. The model is **not intended for clinical use** and has not been validated on external patient cohorts. Any deployment in a medical setting would require further validation, regulatory approval, and clinical oversight.
+* Integration of explainable AI techniques (Grad-CAM, SHAP).
+* Multi-class oral lesion classification.
+* Whole-slide image analysis.
+* Clinical deployment and validation on larger datasets.
+* Integration with computer-aided diagnostic systems.
 
 ---
 
 ## Citation
 
-If you use this work, please cite:
-
 ```bibtex
-@thesis{yourname2024oscc,
-  title   = {OSCC Classification from Histopathological Images using Deep Learning},
-  author  = {Your Full Name},
-  year    = {2024},
-  school  = {Your University Name},
-  type    = {BCA Thesis}
+@thesis{chetia2025oralcancer,
+  title={Design and Evaluation of a CNN Architecture for Classifying Imbalanced Histopathological Images of Oral Cancer},
+  author={Pragyan Chetia},
+  school={Dibrugarh University},
+  year={2025},
+  type={Bachelor's Thesis}
 }
 ```
 
----
+## Disclaimer
 
-## Acknowledgements
-
-- Dataset: [Kaggle OSCC Histopathological Database](https://www.kaggle.com/datasets/ashenafifasilkebede/dataset)
-- Supervisor: [Supervisor Name], [Department], [University]
-- Pre-trained model weights sourced from torchvision model zoo
-
----
-
-## License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+This project was developed for academic and research purposes. The model is not intended for clinical diagnosis without further validation and regulatory approval.
