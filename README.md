@@ -7,7 +7,7 @@
 
 ## Overview
 
-Oral Squamous Cell Carcinoma (OSCC) is one of the most common forms of oral cancer and early diagnosis plays a critical role in improving patient outcomes. Histopathological examination remains the gold standard for diagnosis, but manual analysis is time-consuming and subject to inter-observer variability.
+Oral Squamous Cell Carcinoma (OSCC) is one of the most common forms of oral cancer. Early diagnosis of OSCC plays a critical role in improving patient outcomes. Histopathological examination remains the gold standard for diagnosis, but manual analysis is time-consuming and subject to inter-observer variability.
 
 This project presents a deep learning-based framework for automated classification of oral cancer histopathological images. A custom Convolutional Neural Network (CNN) architecture was designed and evaluated on multiple versions of an imbalanced oral cancer dataset. The proposed model was compared with several state-of-the-art pre-trained CNN architectures including VGG16, VGG19, DenseNet, MobileNet, Xception, EfficientNet, and InceptionV3.
 
